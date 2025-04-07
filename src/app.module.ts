@@ -13,17 +13,6 @@ import { UsersModule } from './users/users.module';
     TypeOrmModule.forRoot(DatabaseConfig),
     ConfigModule.forRoot({
       isGlobal: true,
-      validationSchema: Joi.object({
-        NODE_ENV: Joi.string().valid('development', 'production', 'test', 'provision').default('development'),
-        APP_PORT: Joi.number().port(),
-        DATABASE_TYPE: Joi.string().required(),
-        DATABASE_PORT: Joi.string().required(),
-        DATABASE_HOST: Joi.string().required(),
-        DATABASE_USERNAME: Joi.string().required(),
-        DATABASE_PASSWORD: Joi.string().min(1).required(),
-        DATABASE_NAME: Joi.string().required(),
-
-      }),
     }),
   ],
   controllers: [AppController],

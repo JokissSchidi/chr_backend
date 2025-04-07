@@ -12,19 +12,19 @@ if (result.error) {
 const entities = [User];
 
 export const DatabaseConfig = {
-  type: process.env.DATABASE_TYPE as any,
-  database: process.env.DATABASE_NAME,
-  port: process.env.DATABASE_PORT,
-  username: process.env.DATABASE_USERNAME,
-  password: process.env.DATABASE_PASSWORD,
-  host: process.env.DATABASE_HOST,
+
+  type: process.env.DATABASE_TYPE || 'mysql' as any,
+  host: process.env.DATABASE_HOST || 'localhost',
+  port: process.env.DATABASE_PORT || 3306,
+  username: process.env.DATABASE_USERNAME || 'root',
+  password: process.env.DATABASE_PASSWORD || '',
+  database: process.env.DATABASE_NAME || 'chr',
+  entities: [__dirname + '/**/*.entity{.ts,.js}'],
   synchronize: true,
   migrationsRun: true,
   migrationsTableName: 'migrations',
   migrations: [join(__dirname, 'src/migrations', '*.{ts,js}')],
-//   entities: entities,
-  entities: [__dirname + '/../**/*.entity{.ts,.js}'],
   logging: true,
 };
-console.log('DatabaseConfig', DatabaseConfig)
+//console.log('DatabaseConfig', DatabaseConfig)
 export default DatabaseConfig;

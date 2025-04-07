@@ -1,9 +1,20 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.APP_PORT ?? 3000);
-  //console.log('port:',process.env.APP_PORT)
+
+  const config = new DocumentBuilder()
+    .setTitle('API de gestion')
+    .setDescription('Documentation de l\'API')
+    .setVersion('1.0')
+    .addTag('users') // facultatif
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document); // Swagger accessible à /api
+
+  await app.listen(3000);
 }
 bootstrap();
