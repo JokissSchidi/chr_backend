@@ -6,10 +6,22 @@ import * as Joi from 'joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import DatabaseConfig from 'DatabaseConfig';
 import { UsersModule } from './users/users.module';
+import { PharmatieModule } from './pharmaties/pharmatie.module';
+import { PatientsModule } from './patients/patients.module';
+import { ConsultationModule } from './consultation/consultation.module';
+import { FacturationModule } from './facturation/facturation.module';
+import { ExamensModule } from './examen/examen.module';
+import { HospitalisationModule } from './Hospitalisation/hospitalisation.module';
 
 @Module({
   imports: [
     UsersModule,
+    PharmatieModule,
+    PatientsModule,
+    ConsultationModule,
+    FacturationModule,
+    ExamensModule,
+    HospitalisationModule,
     TypeOrmModule.forRoot(DatabaseConfig),
     ConfigModule.forRoot({
       isGlobal: true,
