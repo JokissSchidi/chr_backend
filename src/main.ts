@@ -1,20 +1,26 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import * as fs from 'fs';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const config = new DocumentBuilder()
-    .setTitle('API de gestion')
-    .setDescription('Documentation de l\'API')
-    .setVersion('1.0')
-    .addTag('users') // facultatif
-    .build();
+  const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+    const options = new DocumentBuilder()
+      .setTitle('CHR')
+      .setDescription('This is the API of project')
+      .addTag('CHR')
+      .setVersion(pkg.version)
+      .build();
+    const document = SwaggerModule.createDocument(app, options);
+    SwaggerModule.setup('api/docs', app, document);// Swagger accessible à /api
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document); // Swagger accessible à /api
+  
 
-  await app.listen(3000);
+  app.enableCors ();
+  await app.listen(3000, function() {
+    console.log('Listening to port:  ' + 3000);
+  })
 }
 bootstrap();

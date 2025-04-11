@@ -1,13 +1,49 @@
-# You can override the included template(s) by including variable overrides
-# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
-# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/pipeline/#customization
-# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
-# Container Scanning customization: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
-# Note that environment variables can be set in several places
-# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 stages:
-- test
+  - test
+  - build
+  - deploy
+
+# 1. Analyse SAST (optionnel, utile pour la sécurité)
 sast:
   stage: test
 include:
 - template: Security/SAST.gitlab-ci.yml
+
+# 2. Étape de build Docker
+build:
+  stage: build
+  image: docker:20
+  services:
+    - docker:dind
+  before_script:
+    - docker info
+  script:
+    - docker build -t nest-back4app-app .
+
+# 3. Déploiement via SSH sur un VPS
+deploy:
+  stage: deploy
+  image: node:18
+  only:
+    - main
+  before_script:
+    - apt-get update && apt-get install -y openssh-client
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - chmod 700 ~/.ssh
+    - ssh-keyscan -H $SERVER_HOST >> ~/.ssh/known_hosts
+  script:
+    # Envoie du projet buildé ou de l'image Docker au serveur
+    - scp -r . $SSH_USER@$SERVER_HOST:/var/www/nest-app
+    - ssh $SSH_USER@$SERVER_HOST << EOF
+        cd /var/www/nest-app
+        docker build -t nest-back4app-app .
+        docker stop nest-container || true
+        docker rm nest-container || true
+        docker run -d --name nest-container \
+          -p 3000:3000 \
+          -e PARSE_APP_ID=$PARSE_APP_ID \
+          -e PARSE_CLIENT_KEY=$PARSE_CLIENT_KEY \
+          -e PARSE_SERVER_URL=$PARSE_SERVER_URL \
+          nest-back4app-app
+      EOF
