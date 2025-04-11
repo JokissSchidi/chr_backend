@@ -1,12 +1,23 @@
-http:
-  host: 'localhost'
-  port: 3003
+server:
+  port: 3000
 
 db:
-  mysql:
-    url: 'localhost'
-    port: 3306
-    database: 'chr'
+  core:
+    type: mysql
+    port: 8889
+    database: chr
+    host: localhost
+    username: 'root'
+    password: 'root'
+    synchronize: false
 
-  sqlite:
-    database: '3306'
+nodemailer:
+  mail_host: email-smtp.us-west-2.amazonaws.com
+  mail_user: AKIA6J344BOIY3MGJONY
+  mail_password: BHsTMDYbd8UvJeZM6/rOe4n8P9f1ObFcvJD++NFmOJgl
+  mail_from: Chambre de Commerce CI <no-reply@akilcab.com>
+  mail_secure: true
+
+jwt:
+  secret: zjP9h6ZI5LoSKCR
+  expiration: 86400
