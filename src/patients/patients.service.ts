@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreatePatientDto } from 'src/users/dto/create-patient.dto';
 import { Patients } from 'src/users/entities/patients.entity';
 import { Repository } from 'typeorm';
 
@@ -8,17 +9,17 @@ export class PatientsService {
 
       constructor(@InjectRepository(Patients) private patientsRepository: Repository<Patients>,
       ) {}
-      create() {
-        return this.patientsRepository.find();
+      create(createPatientDto: CreatePatientDto) {
+        return this.patientsRepository.save(createPatientDto);
       }
 
 
-    findAll() {
-        return `This action returns all users`;
+    async findAll() {
+        return await this.patientsRepository.find() ;
     }
 
-    getHello(): string {
-        return '!';
+    async getOne(id: number): Promise<Patients | null>  {
+        return await this.patientsRepository.findOneBy({id});
     }
 
 }

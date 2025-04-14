@@ -9,23 +9,28 @@ import { User } from './entities/user.entity';
 export class UsersService {
   constructor(@InjectRepository(User) private usersRepository: Repository<User>,
   ) {}
-  create(createUserDto: CreateUserDto) {
-    return this.usersRepository.find();
+  async create(createUserDto: CreateUserDto) {
+    return await this.usersRepository.save(createUserDto);
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll(): Promise<User[]> {
+    return await this.usersRepository.find()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number): Promise<User | null> {
+    return await this.usersRepository.findOneBy({id})
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const updateUser = await this.usersRepository.update(id, updateUserDto)
+    return updateUser;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    const user = await this.findOne(id)
+    const names = user?.firstName
+    await this.usersRepository.delete(id);
+
+    return `This action removes a #${names} user`;
   }
 }

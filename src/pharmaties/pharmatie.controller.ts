@@ -6,15 +6,17 @@ import { PharmatieService } from './pharmatie.service';
 
 
 @ApiTags('pharmatie')
-@Controller('pharmatie')
+@Controller('api/pharmatie')
 export class PharmatieController {
-  constructor(private readonly photoService: PharmatieService) {}
+  constructor(private readonly photoService: PharmatieService) { }
 
-    @Post('upload')
-    @UseInterceptors(FileInterceptor('file', {
+  @Post('upload')
+  @ApiOperation({ summary: 'Scarner l`ordonnance' })
+  @ApiResponse({ status: 200, description: 'Ordonnance a scanner' })
+  @UseInterceptors(FileInterceptor('file', {
     dest: './uploads/photos',
-    }))
-    uploadFile(@UploadedFile() file: Express.Multer.File) {
+  }))
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
     return this.photoService.savePhoto(file);
-    }
+  }
 }
