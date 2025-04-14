@@ -7,17 +7,18 @@ const dotenv_path = path.resolve(process.cwd(), `.env`);
 const result = dotenv.config({ path: dotenv_path });
 if (result.error) {
   /* do nothing */
+  
 }
 
 
 export const DatabaseConfig = {
 
-  type: process.env.DATABASE_TYPE || config.db.core.type,
-  host: process.env.DATABASE_HOST || config.db.core.host,
-  port: process.env.DATABASE_PORT || config.db.core.port,
-  username: process.env.DATABASE_USERNAME || config.db.core.username,
-  password: process.env.DATABASE_PASSWORD || config.db.core.password,
-  database: process.env.DATABASE_NAME || config.db.core.database,
+  type: process.env.DATABASE_TYPE || 'mysql' as any,
+  host: process.env.DATABASE_HOST || 'localhost',
+  port: process.env.DATABASE_PORT || '3306',
+  username: process.env.DATABASE_USERNAME || 'root',
+  password: process.env.DATABASE_PASSWORD || '',
+  database: process.env.DATABASE_NAME || 'chr',
   entities: [__dirname + '/**/*.entity{.ts,.js}'],
   synchronize: false,
   migrationsRun: false,
