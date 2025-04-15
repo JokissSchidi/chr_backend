@@ -20,11 +20,11 @@ export const DatabaseConfig = {
   password: process.env.DATABASE_PASSWORD || '',
   database: process.env.DATABASE_NAME || 'chr',
   entities: [__dirname + '/**/*.entity{.ts,.js}'],
-  synchronize: false,
-  migrationsRun: false,
+  synchronize: true,
+  migrationsRun: true,
   migrationsTableName: 'migrations',
   migrations: [join(__dirname, 'src/migrations', '*.{ts,js}')],
-  logging: false,
+  logging: true,
 };
 //console.log('DatabaseConfig', DatabaseConfig)
 export default DatabaseConfig;
