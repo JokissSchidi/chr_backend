@@ -45,7 +45,8 @@ lerna-debug.log*
 .env.local
 
 # data
-DatabaseConfig
+#DatabaseConfig.ts
+config/
 
 # temp directory
 .temp
