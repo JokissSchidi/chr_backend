@@ -33,17 +33,7 @@ deploy:
     - chmod 700 ~/.ssh
     - ssh-keyscan -H $SERVER_HOST >> ~/.ssh/known_hosts
   script:
-    # Envoie du projet buildé ou de l'image Docker au serveur
-    - scp -r . $SSH_USER@$SERVER_HOST:/var/www/nest-app
-    - ssh $SSH_USER@$SERVER_HOST << EOF
-        cd /var/www/nest-app
-        docker build -t nest-back4app-app .
-        docker stop nest-container || true
-        docker rm nest-container || true
-        docker run -d --name nest-container \
-          -p 3000:3000 \
-          -e PARSE_APP_ID=$PARSE_APP_ID \
-          -e PARSE_CLIENT_KEY=$PARSE_CLIENT_KEY \
-          -e PARSE_SERVER_URL=$PARSE_SERVER_URL \
-          nest-back4app-app
-      EOF
+    - echo "$FLY_API_TOKEN" | flyctl auth token
+    - npm install
+    - npm run build || (echo "Erreur build : $?"; cat dist/main.js || true; exit 1)
+    - flyctl deploy --app $FLY_APP_NAME --remote-only
