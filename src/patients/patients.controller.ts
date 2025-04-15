@@ -23,7 +23,7 @@ export class PatientsController {
     }
 
     @Get(':id')
-    getOne(@Param('id') id: number) {
+    getOne(@Param('id') id: string) {
         return this.patientsService.getOne(id);
     }
 }

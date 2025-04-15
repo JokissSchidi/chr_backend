@@ -1,9 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { AuditableEntity } from "src/auditable/auditable.entity";
+import { Column, Entity } from "typeorm";
 
 @Entity()
-export class Paiements{
-    @PrimaryGeneratedColumn()
-    id: number;
+export class Paiements extends AuditableEntity {
 
     @Column()
     name: string;
