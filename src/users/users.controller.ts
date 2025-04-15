@@ -26,7 +26,7 @@ export class UsersController {
   @Get(':id')
   @ApiOperation({ summary: 'Info de l`utilisateur' })
   @ApiResponse({ status: 200, description: 'Information de l`utilisateur' })
-  findOne(@Param('id') id: number) {
+  findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
 
@@ -41,6 +41,6 @@ export class UsersController {
   @ApiOperation({ summary: 'Supprèssion de l`utilisateur' })
   @ApiResponse({ status: 200, description: 'Utilisateur supprimé' })
   remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+    return this.usersService.remove(id);
   }
 }

@@ -17,7 +17,7 @@ export class UsersService {
     return await this.usersRepository.find()
   }
 
-  async findOne(id: number): Promise<User | null> {
+  async findOne(id: string) {
     return await this.usersRepository.findOneBy({id})
   }
 
@@ -26,7 +26,7 @@ export class UsersService {
     return updateUser;
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     const user = await this.findOne(id)
     const names = user?.firstName
     await this.usersRepository.delete(id);

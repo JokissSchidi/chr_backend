@@ -18,7 +18,7 @@ export class PatientsService {
         return await this.patientsRepository.find() ;
     }
 
-    async getOne(id: number): Promise<Patients | null>  {
+    async getOne(id: string) {
         return await this.patientsRepository.findOneBy({id});
     }
 
