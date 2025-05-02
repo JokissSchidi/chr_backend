@@ -21,14 +21,12 @@ WORKDIR /app
 # Copie uniquement les fichiers nécessaires
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/.env .env
 
 # Install uniquement les dépendances de production
 RUN npm install --only=production
 
 EXPOSE 3000
 
-RUN ls -la dist
 
 # Lancement de l'application NestJS
 CMD ["node", "dist/main.js"]
