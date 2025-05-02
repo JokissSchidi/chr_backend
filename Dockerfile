@@ -1,23 +1,34 @@
-# Utilise une image officielle Node.js
-FROM node:18-alpine
+# Étape 1 : build de l'app NestJS
+FROM node:18-alpine AS builder
 
-# Crée un dossier de travail
 WORKDIR /app
 
-# Copie les fichiers package
+# Copie et installe les dépendances
 COPY package*.json ./
-
-# Installe les dépendances
 RUN npm install
 
-# Copie tout le reste
+# Copie tous les fichiers
 COPY . .
 
-# Build du projet
+# Build du projet NestJS (va créer /app/dist)
 RUN npm run build
 
-# Expose le port
+# Étape 2 : image finale de production
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copie uniquement les fichiers nécessaires
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/.env .env
+
+# Install uniquement les dépendances de production
+RUN npm install --only=production
+
 EXPOSE 3000
 
-# Commande de lancement
-CMD ["npm", "run", "start"]
+RUN ls -la dist
+
+# Lancement de l'application NestJS
+CMD ["node", "dist/main.js"]
